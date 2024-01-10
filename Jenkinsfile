@@ -6,7 +6,7 @@ pipeline {
    stages{
     stage('CompileandRunSonarAnalysis') {
             steps {	
-		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=asgbuggywebapp -Dsonar.organization=asgbuggywebapp -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=932558e169d66a8f1d1adf470b908a46156f5844'
+		sh 'mvn clean verify sonar:sonar -Dsonar.projectKey=awsdevsecops1_aws -Dsonar.organization=awsdevsecops1 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=f6e90ab78048b186236b73b037b406b60e52f623'
 			}
     }
 
@@ -16,13 +16,13 @@ pipeline {
 					sh 'mvn snyk:test -fn'
 				}
 			}
-    }
+    }	
 
 	stage('Build') { 
             steps { 
                withDockerRegistry([credentialsId: "dockerlogin", url: ""]) {
                  script{
-                 app =  docker.build("asg")
+                 app =  docker.build("awsd")
                  }
                }
             }
@@ -31,7 +31,7 @@ pipeline {
 	stage('Push') {
             steps {
                 script{
-                    docker.withRegistry('https://145988340565.dkr.ecr.us-west-2.amazonaws.com', 'ecr:us-west-2:aws-credentials') {
+                    docker.withRegistry('https://975049920961.dkr.ecr.ap-southeast-2.amazonaws.com', 'ecr:ap-southeast-2:aws-credentials') {
                     app.push("latest")
                     }
                 }
